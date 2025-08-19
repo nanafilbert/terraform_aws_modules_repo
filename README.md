@@ -53,9 +53,7 @@ Add a GitHub Token in your repository secrets if you plan to use version bumping
 Usage
 Example usage in a Terraform deployment repository:
 
-hcl
-Copy
-Edit
+
 module "vpc" {
   source          = "git::https://github.com/nanafilbert/terraform_aws_modules_repo.git//modules/vpc"
   name            = "my-vpc"
@@ -78,9 +76,7 @@ Versioning
 This repository uses Git tags for versioning.
 Each module can be referenced by tag in deployment repositories:
 
-hcl
-Copy
-Edit
+
 module "vpc" {
   source  = "git::https://github.com/nanafilbert/terraform_aws_modules_repo.git//modules/vpc?ref=v1.0.0"
 }
