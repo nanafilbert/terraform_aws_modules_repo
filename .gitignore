@@ -30,3 +30,4 @@ terraform.tfvars
 .DS_Store
 # Windows
 Thumbs.db
+.oidc/

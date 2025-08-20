@@ -5,7 +5,7 @@ resource "aws_instance" "webserver" {
   for_each = var.instances
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = each.value
-   key_name                   = var.key_name
+  key_name                   = var.key_name
   subnet_id                   = var.subnet_id
   security_groups             = var.security_group_ids
   associate_public_ip_address = var.associate_public_ip_address
