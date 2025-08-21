@@ -23,12 +23,4 @@ jobs:
         WITH_V: false
 
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v2
-      if: success()
-      env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-      with:
-          tag_name: ${{ steps.bump-version.outputs.new_tag }}
-          name: Release ${{ steps.bump-version.outputs.new_tag }}
-          generate_release_notes: true
+    #
