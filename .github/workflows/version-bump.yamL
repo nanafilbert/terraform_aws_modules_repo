@@ -1,26 +1,25 @@
-name: Bump version
+name: Diagnostic
 on:
   push:
     branches:
-    - main
-    paths: 
-    - "terraform_aws_module/modules/**"
+      - main
 
 jobs:
-  build:
+  diagnose:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: '0'
-
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.67.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-        WITH_V: true
-
-
-    #
+      - uses: actions/checkout@v4
+      
+      - name: List repository structure
+        run: |
+          echo "Repository structure:"
+          find . -type f -name "*.tf" -o -name "*.yml" -o -name "*.yaml" | head -20
+          
+      - name: Check current branch
+        run: |
+          echo "Current branch: $(git branch --show-current)"
+          
+      - name: List changed files in last commit
+        run: |
+          echo "Files changed in last commit:"
+          git diff-tree --no-commit-id --name-only -r HEAD
