@@ -2,7 +2,7 @@ version: 2
 updates:
   # 1️⃣ Terraform updates
   - package-ecosystem: "terraform"
-    directory: "/terraform_aws_module/modules"
+    directory: "/vpc"
     target-branch: "main"
     schedule:
       interval: "weekly"
