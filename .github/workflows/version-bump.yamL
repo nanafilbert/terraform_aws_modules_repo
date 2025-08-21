@@ -31,3 +31,5 @@ jobs:
         run: |
           echo "Previous tag: ${{ steps.bump-version.outputs.tag }}"
           echo "New tag: ${{ steps.bump-version.outputs.new_tag }}"
+
+  #
