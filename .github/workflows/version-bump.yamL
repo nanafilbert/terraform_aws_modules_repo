@@ -3,8 +3,7 @@ on:
   push:
     branches:
       - main
-     # Updated path to match your structure
-
+    
 jobs:
   bump-version:
     runs-on: ubuntu-latest
