@@ -1,12 +1,19 @@
+
 version: 2
 updates:
-  # 1️⃣ Terraform updates
   - package-ecosystem: "terraform"
-    directory: "/modules/vpc"
-    target-branch: "main"
+    directory: "/terraform_aws_module/modules/vpc"
     schedule:
       interval: "weekly"
-      time: "06:00"
-      timezone: "GMT"
+    
+  - package-ecosystem: "terraform"
+    directory: "/terraform_aws_module/modules/ec2"
+    schedule:
+      interval: "weekly"
+    
+  - package-ecosystem: "terraform"
+    directory: "/terraform_aws_module/modules/security_grps"
+    schedule:
+      interval: "weekly"
     reviewers:
       - "nanafilbert"
