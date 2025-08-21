@@ -1,17 +1,20 @@
 version: 2
 updates:
+  # 1️⃣ Terraform updates
   - package-ecosystem: "terraform"
     directory: "/"
     target-branch: "main"
+    schedule:
+      interval: "weekly"
+      time: "06:00"
+      timezone: "GMT"
 
+  # 2️⃣ GitHub Actions updates
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-    reviewers:
-      - "nanafilbert"
-schedule:
-      interval: "weekly"
       time: "06:00"
       timezone: "GMT"
-   
+    reviewers:
+      - "nanafilbert"
