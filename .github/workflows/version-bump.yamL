@@ -3,8 +3,7 @@ on:
   push:
     branches:
       - main
-    paths: 
-      - "terraform_aws_module/modules/**"  # Updated path to match your structure
+     # Updated path to match your structure
 
 jobs:
   bump-version:
