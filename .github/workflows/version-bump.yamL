@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths: 
-      - "terraform_aws_module/modules/**"  # Updated path to match your structure
+      - "terraform_aws_module/modules/**"
 
 jobs:
   bump-version:
@@ -14,25 +14,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: '0'  # Fetch full history for proper versioning
+          fetch-depth: '0'
 
       - name: Bump version and push tag
+        id: bump-version  # Added ID to reference outputs
         uses: anothrNick/github-tag-action@1.67.0
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}  # Use built-in token instead
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
           WITH_V: true
-          DEFAULT_BUMP: patch  # Explicit patch bumps for dependency updates
+          DEFAULT_BUMP: patch
           RELEASE_BRANCHES: main
           DRY_RUN: false
 
       - name: Create Release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1  # Updated to maintained action
         if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
         with:
           tag_name: ${{ steps.bump-version.outputs.new_tag }}
-          release_name: Release ${{ steps.bump-version.outputs.new_tag }}
+          name: Release ${{ steps.bump-version.outputs.new_tag }}
           body: |
             ## Changes in this Release
             - Dependency updates via Dependabot
