@@ -1,25 +1,33 @@
-name: Diagnostic
+name: Bump version
 on:
   push:
     branches:
       - main
+    paths: 
+      - "terraform_aws_module/modules/**"
 
 jobs:
-  diagnose:
+  bump-version:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
     steps:
       - uses: actions/checkout@v4
-      
-      - name: List repository structure
+        with:
+          fetch-depth: '0'
+
+      - name: Bump version and push tag
+        id: bump-version
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}  # Try built-in token first
+          WITH_V: true
+          DEFAULT_BUMP: patch
+          RELEASE_BRANCHES: main
+          DRY_RUN: false
+
+      - name: Debug output
         run: |
-          echo "Repository structure:"
-          find . -type f -name "*.tf" -o -name "*.yml" -o -name "*.yaml" | head -20
-          
-      - name: Check current branch
-        run: |
-          echo "Current branch: $(git branch --show-current)"
-          
-      - name: List changed files in last commit
-        run: |
-          echo "Files changed in last commit:"
-          git diff-tree --no-commit-id --name-only -r HEAD
+          echo "Previous tag: ${{ steps.bump-version.outputs.tag }}"
+          echo "New tag: ${{ steps.bump-version.outputs.new_tag }}"
