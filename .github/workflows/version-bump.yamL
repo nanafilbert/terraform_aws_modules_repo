@@ -2,22 +2,40 @@ name: Bump version
 on:
   push:
     branches:
-    - main
+      - main
     paths: 
-    - "modules/**"
+      - "terraform_aws_module/modules/**"  # Updated path to match your structure
 
 jobs:
-  build:
+  bump-version:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: '0'
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'  # Fetch full history for proper versioning
 
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.67.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-        WITH_V: true
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use built-in token instead
+          WITH_V: true
+          DEFAULT_BUMP: patch  # Explicit patch bumps for dependency updates
+          RELEASE_BRANCHES: main
+          DRY_RUN: false
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.bump-version.outputs.new_tag }}
+          release_name: Release ${{ steps.bump-version.outputs.new_tag }}
+          body: |
+            ## Changes in this Release
+            - Dependency updates via Dependabot
+            - Module version: ${{ steps.bump-version.outputs.new_tag }}
+          draft: false
+          prerelease: false
