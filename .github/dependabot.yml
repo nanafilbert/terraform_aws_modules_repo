@@ -3,9 +3,14 @@ updates:
   - package-ecosystem: "terraform"
     directory: "/"
     target-branch: "main"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
     reviewers:
       - "nanafilbert"
-    schedule:
+schedule:
       interval: "weekly"
       time: "06:00"
       timezone: "GMT"
