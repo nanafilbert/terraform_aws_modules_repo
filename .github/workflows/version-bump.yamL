@@ -1,74 +1,38 @@
-name: Bump version and create release
-
+name: Bump version
 on:
   push:
     branches:
-      - main
-    paths:
-      - "terraform_aws_module/modules/**"
-  # Add workflow_dispatch to allow manual triggering
-  workflow_dispatch:
+    - main
+    paths: 
+    - "terraform_aws_module/modules/**"
 
 jobs:
-  bump-version:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: '0'
-          # Fetch all tags for version detection
-          fetch-tags: true
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: '0'
 
-      - name: Bump version and push tag
-        id: bump-version
-        uses: anothrNick/github-tag-action@1.67.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+    - name: Bump version and push tag
+      id: bump-version
+      uses: anothrNick/github-tag-action@1.67.0
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # or TOKEN_GITHUB if you need PAT
           WITH_V: true
           DEFAULT_BUMP: patch
           RELEASE_BRANCHES: main
           DRY_RUN: false
-          # Additional options for better control
-          INITIAL_VERSION: "0.0.1"
-          VERBOSE: true
+          PUSH_TAG: true
 
-      - name: Debug output
-        run: |
-          echo "New tag: ${{ steps.bump-version.outputs.new_tag }}"
-          echo "Previous tag: ${{ steps.bump-version.outputs.previous_tag }}"
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        if: success() && steps.bump-version.outputs.new_tag != ''
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-        with:
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      if: success()
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
           tag_name: ${{ steps.bump-version.outputs.new_tag }}
           name: Release ${{ steps.bump-version.outputs.new_tag }}
-          body: |
-            ## Changes in this Release
-            - Dependency updates via Dependabot
-            - Module version: ${{ steps.bump-version.outputs.new_tag }}
-            
-            ### Changelog
-            Automated version bump from ${{ steps.bump-version.outputs.previous_tag }} to ${{ steps.bump-version.outputs.new_tag }}
-          draft: false
-          prerelease: false
-          # Generate release notes automatically
           generate_release_notes: true
-
-      - name: Notify on failure
-        if: failure()
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🚫 Version bump workflow failed! Please check the workflow runs.'
-            })
