@@ -100,4 +100,3 @@ Author: Filbert Nana Blessing
 Contact: GitHub
 
 
-echo "# test run"
